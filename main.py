@@ -96,15 +96,13 @@ class LogisticRegression:
 
         layout = go.Layout(
             xaxis=dict(
-                # range=[-14.1, 14.1],
                 title='X',
                 zeroline=True,
                 zerolinewidth=2,
                 zerolinecolor='rgba(205, 200, 193, 0.7)'
             ),
             yaxis=dict(
-                # range=[-0.5, 1.5],
-                title='Y',
+                title='Y/Y_hat',
                 zeroline=True,
                 zerolinewidth=2,
                 zerolinecolor='rgba(205, 200, 193, 0.7)'
@@ -124,7 +122,8 @@ class LogisticRegression:
                     x = self.weight_m,
                     y = self.bias_m,
                     z = L_m,
-                    name ='Loss function landscape'
+                    name ='Loss function landscape',
+                    opacity=0.7
                 )
 
             # global
@@ -154,14 +153,23 @@ class LogisticRegression:
             # layout 
             layout = go.Layout(
                  scene= dict(
-                      xaxis = dict(range=[-5,15],title='weight'),
-                      yaxis = dict(range=[-5,15],title='bias'),
-                      zaxis = dict(range=[0,25],title ='loss')
-                 )
+                      xaxis = dict(title='weight'),
+                      yaxis = dict(title='bias'),
+                      zaxis = dict(title ='loss')
+                 ),
+                  legend=dict(
+                          x=1.25,  # Position the legend to the right
+                          y= 0.95,  # Vertically center the legend
+                          bgcolor='rgba(255, 255, 255, 0.5)',  # Semi-transparent background
+                          # bordercolor='black',
+                          borderwidth=1
+                      )
             )
 
 
-            figure = go.Figure(data = [loss_landscape,Global_minima,ball])
+
+
+            figure = go.Figure(data = [loss_landscape,Global_minima,ball],layout=layout)
             
             return figure
     
@@ -214,5 +222,14 @@ with container:
 
 
 
-
+      
         st.write('-------------')
+
+    L_f,L_m,secret_weight,secret_bias = data.Loss() # fifth
+    with col2:
+       figure_2 = data.loss_landscape(L_f,L_m,secret_weight,secret_bias) # seventh
+       st.plotly_chart(figure_2,use_container_width=True)
+       st.write('---------------')
+       
+
+
